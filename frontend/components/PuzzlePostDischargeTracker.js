@@ -400,37 +400,52 @@ function SNFFacilityView({ phiMask }) {
   const rows = PATIENTS.filter(p => p.facilityId === facilityId).map(p => ({ ...p, facilityName: f.name }));
   const [patientOpen, setPatientOpen] = useState(false);
   const [activePatient, setActivePatient] = useState(null);
+  const todayCard = (title, list) => (
+    <Card>
+      <CardHeader className="pb-2"><CardTitle className="text-base">{title}</CardTitle></CardHeader>
+      <CardContent className="space-y-2">
+        {list.length ? list.map(p => (
+          <div key={p.id} className="p-2 rounded-xl bg-muted text-sm flex items-center justify-between">
+            <span>{mask(phiMask, p.name)}</span>
+            <TierBadge tier={p.riskTier} />
+          </div>
+        )) : <div className="text-sm text-muted-foreground">No items</div>}
+      </CardContent>
+    </Card>
+  );
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-4 gap-4">
-        <KPI label="Admits today" value={String(admits.length)} icon={<Hospital className="h-5 w-5" />} />
-        <KPI label="Discharges planned" value={String(discharges.length)} icon={<Home className="h-5 w-5" />} />
-        <KPI label="Open escalations" value={String(escalations.length)} icon={<AlertTriangle className="h-5 w-5" />} />
-        <KPI label="Engagement" value={`${engagementScore(f)}%`} icon={<CheckCircle2 className="h-5 w-5" />} />
+        <KPI label="Census" value={String(rows.filter(p => !p.atHome).length)} icon={<Building2 className="h-5 w-5" />} />
+        <KPI label="Discharges (30d)" value={String(discharges.length)} icon={<Home className="h-5 w-5" />} />
+        <KPI label="Open escalations" value={String(escalations.length)} icon={<Bell className="h-5 w-5" />} />
+        <KPI label="Engagement" value={`${engagementScore(f)} / 100`} icon={<CheckCircle2 className="h-5 w-5" />} />
       </div>
       <div className="flex items-center gap-3">
         <div className="text-sm text-muted-foreground">Facility:</div>
         <Select value={facilityId} onValueChange={setFacilityId}>
-          <SelectTrigger className="w-[300px]"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-[320px]"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {FACILITIES.map(fac => <SelectItem key={fac.id} value={fac.id}>{fac.name}</SelectItem>)}
+            {FACILITIES.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {admits.map((p, i) => (
-          <Card key={`adm${i}`}> <CardHeader className="pb-2"><CardTitle className="text-base">Admit: {mask(phiMask, p.name)}</CardTitle></CardHeader><CardContent>{p.payer}</CardContent></Card>
-        ))}
-      </div>
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {discharges.map((p, i) => (
-          <Card key={`dis${i}`}> <CardHeader className="pb-2"><CardTitle className="text-base">Discharge: {mask(phiMask, p.name)}</CardTitle></CardHeader><CardContent>{p.payer}</CardContent></Card>
-        ))}
-      </div>
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {escalations.map((a, i) => (
-          <Card key={`esc${i}`}> <CardHeader className="pb-2"><CardTitle className="text-base">{a.type}</CardTitle></CardHeader><CardContent className="text-sm"><div>{a.severity} — {mask(phiMask, a.patient.name)}</div></CardContent></Card>
-        ))}
+      <div className="grid md:grid-cols-3 gap-4">
+        {todayCard('Admits (today)', admits)}
+        {todayCard('Planned discharges (7d)', discharges)}
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-base">Escalations</CardTitle></CardHeader>
+          <CardContent className="space-y-2">
+            {escalations.length ? escalations.map((a, i) => (
+              <div key={i} className="p-2 rounded-xl bg-muted text-sm flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" /> <span>{a.type} • {mask(phiMask, a.patient.name)}</span>
+                </div>
+                <Badge>{a.severity}</Badge>
+              </div>
+            )) : <div className="text-sm text-muted-foreground">None</div>}
+          </CardContent>
+        </Card>
       </div>
       <Card>
         <CardHeader className="pb-2"><CardTitle className="text-base">All Patients</CardTitle></CardHeader>
@@ -482,7 +497,7 @@ function PuzzleTeamView({ phiMask }) {
                       <Button size="sm" onClick={() => open(p)}>Open</Button>
                     </div>
                   </div>
-                )))}
+                ))}
               </CardContent>
             </Card>
           ))}
