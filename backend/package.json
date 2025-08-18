@@ -1,0 +1,16 @@
+{
+  "name": "puzzle-backend",
+  "version": "0.1.0",
+  "description": "Backend API for Puzzle Post-Discharge Tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prisma": "^5.3.1",
+    "@prisma/client": "^5.3.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5"
+  }
+}
