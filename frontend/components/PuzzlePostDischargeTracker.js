@@ -567,8 +567,27 @@ export default function PuzzlePostDischargeTracker() {
   const roleName = role === 'health_system' ? 'Health System' : role === 'snf_chain' ? 'SNF Chain' : role === 'snf_facility' ? 'SNF Facility' : 'Puzzle Team';
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* Define fallback styles for custom classes used throughout the app. Without a Tailwind
+          configuration file, classes like bg-muted or text-muted-foreground are undefined.
+          Here we map them to sensible Tailwind colors so the UI more closely matches
+          the original design. */}
+      <style jsx global>{`
+        .bg-background { background-color: #f9fafb; }
+        .text-foreground { color: #1f2937; }
+        .bg-background\/80 { background-color: rgba(249, 250, 251, 0.8); }
+        .bg-background\/60 { background-color: rgba(249, 250, 251, 0.6); }
+        .bg-muted { background-color: #f3f4f6; }
+        .bg-muted\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        .text-muted-foreground { color: #6b7280; }
+        .bg-primary\/90 { background-color: rgba(59, 130, 246, 0.9); }
+      `}</style>
+      {/*
+        Use plain Tailwind classes instead of custom tokens like bg-background or text-foreground.
+        This makes the page look closer to the original prototype when no custom tailwind
+        configuration is available.  We default to a light neutral background with dark text
+        and translucent top bar.  */}
+      <div className="min-h-screen bg-gray-50 text-gray-800">
+        <div className="sticky top-0 z-20 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
           <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-xl bg-primary/90" />
