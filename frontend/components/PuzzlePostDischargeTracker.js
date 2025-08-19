@@ -572,14 +572,24 @@ export default function PuzzlePostDischargeTracker() {
           Here we map them to sensible Tailwind colors so the UI more closely matches
           the original design. */}
       <style jsx global>{`
-        .bg-background { background-color: #f9fafb; }
+        /*
+         * Custom fallback colour palette
+         *
+         * These colours were tuned to more closely resemble the polished
+         * prototype you built in canvas.  The base background and muted
+         * surfaces are lighter and slightly warm, while the primary accent
+         * has deeper saturation.  Adjust these values if you refine the
+         * palette further.  The escaped slashes (e.g. bg-primary\/90) are
+         * required because styled-jsx uses CSS-in-JS template strings.
+         */
+        .bg-background { background-color: #f7f9fc; }
         .text-foreground { color: #1f2937; }
-        .bg-background\/80 { background-color: rgba(249, 250, 251, 0.8); }
-        .bg-background\/60 { background-color: rgba(249, 250, 251, 0.6); }
-        .bg-muted { background-color: #f3f4f6; }
-        .bg-muted\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        .bg-background\/80 { background-color: rgba(247, 249, 252, 0.8); }
+        .bg-background\/60 { background-color: rgba(247, 249, 252, 0.6); }
+        .bg-muted { background-color: #f5f6fa; }
+        .bg-muted\/30 { background-color: rgba(245, 246, 250, 0.3); }
         .text-muted-foreground { color: #6b7280; }
-        .bg-primary\/90 { background-color: rgba(59, 130, 246, 0.9); }
+        .bg-primary\/90 { background-color: #3843d0; }
       `}</style>
       {/*
         Use plain Tailwind classes instead of custom tokens like bg-background or text-foreground.
