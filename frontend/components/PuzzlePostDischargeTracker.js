@@ -198,6 +198,11 @@ function PatientsTable({ rows, phiMask, onOpen }) {
 }
 function PatientModal({ open, onOpenChange, p, phiMask }) {
   if (!p) return null;
+  // Provide fallbacks for undefined properties to prevent runtime errors
+  const vitals = p.vitals || [];
+  const interventions = p.interventions || [];
+  const encounters = p.encounters || [];
+  const tasks = p.tasks || [];
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl">
@@ -215,7 +220,7 @@ function PatientModal({ open, onOpenChange, p, phiMask }) {
               <CardHeader className="pb-2"><CardTitle className="text-base">Vitals (last 14 days)</CardTitle></CardHeader>
               <CardContent className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={p.vitals}>
+                  <LineChart data={vitals}>
                     <XAxis dataKey="day" />
                     <YAxis />
                     <RTooltip />
@@ -229,7 +234,7 @@ function PatientModal({ open, onOpenChange, p, phiMask }) {
             <Card>
               <CardHeader className="pb-2"><CardTitle className="text-base">Interventions</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                {p.interventions.map((it, idx) => (
+                {interventions.map((it, idx) => (
                   <div key={idx} className="p-3 rounded-xl bg-muted flex items-start gap-3 text-sm">
                     <ClipboardList className="h-4 w-4 mt-0.5" />
                     <div>
@@ -249,7 +254,7 @@ function PatientModal({ open, onOpenChange, p, phiMask }) {
             <Card>
               <CardHeader className="pb-2"><CardTitle className="text-base">Timeline</CardTitle></CardHeader>
               <CardContent className="space-y-3 text-sm">
-                {p.encounters.map((e, i) => (
+                {encounters.map((e, i) => (
                   <div key={i} className="flex items-center gap-2">
                     {e.type === 'Hospital' ? <Hospital className="h-4 w-4" /> : e.type === 'SNF' ? <Building2 className="h-4 w-4" /> : <Home className="h-4 w-4" />}
                     <div className="flex-1 flex items-center justify-between">
@@ -263,7 +268,7 @@ function PatientModal({ open, onOpenChange, p, phiMask }) {
             <Card>
               <CardHeader className="pb-2"><CardTitle className="text-base">Tasks</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                {p.tasks.map(t => (
+                {tasks.map(t => (
                   <div key={t.id} className="flex items-center justify-between p-2 rounded-xl bg-muted">
                     <div className="text-sm">{t.title}</div>
                     <Badge variant={t.status === 'Done' ? 'secondary' : 'default'}>{t.status}</Badge>
